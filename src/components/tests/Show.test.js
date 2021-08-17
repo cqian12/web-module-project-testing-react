@@ -7,7 +7,17 @@ import Show from './../Show';
 const testShow = {
     name: 'Nathan For You',
     summary: 'GOAT',
-    seasons:[ {id:1, name: 'Season 1',episodes:[]},{id:2,name:'Season 2', episodes:[]}]
+    seasons:[{id:1, name: 'Season 1',episodes:[{}]},
+    {id:2,name:'Season 2', episodes:[{
+        id:1,
+        name: "",
+        image: "http://static.tvmaze.com/uploads/images/medium_landscape/67/168918.jpg",
+        season: 1,
+        number: 1,
+        summary: "New summary text",
+        runtime: 1
+    }]
+}]
 }
 
 test('renders testShow and no selected Season without errors', ()=>{
@@ -33,29 +43,28 @@ test('renders same number of options seasons are passed in', ()=>{
 });
 
 test('handleSelect is called when an season is selected', () => {
-    const fakeSelect = jest.fn
+    const fakeSelect = jest.fn()
     
     render (<Show show={testShow} selectedSeason={'none'} handleSelect={fakeSelect} />)
 
-    //const firstSeason = screen.getByTestId('season-option')
+    const select = screen.queryByLabelText(/select a season/i)
 
-    //userEvent.click()
+    userEvent.selectOptions(select,['1'])
+    expect(fakeSelect).toHaveBeenCalledTimes(1)
 });
 
 test('component renders when no seasons are selected and when rerenders with a season passed in', () => {
-    const { rerender } = render (<Show show={testShow} selectedSeason={'none'} />)
+    const { rerender } = render (<Show show={testShow}  selectedSeason={'none'} />)
 
-    let episodes = screen.queryAllByTestId('episodes-container')
+    let episodes = screen.queryByTestId('episodes-container')
 
     expect(episodes).not.toBeInTheDocument()
 
-    // rerender(<Show show={testShow} selectedSeason={testShow.seasons[0]} />)
+    rerender(<Show show={testShow} selectedSeason={1}  />)
 
-    // episodes = screen.queryAllByTestId('episodes-container')
+    episodes = screen.queryByTestId('episodes-container')
 
-    // expect(episodes).toBeInTheDocument()
-    // expect(episodes).toBeTruthy()
-    // expect(episodes).toHaveLength(0)
+    expect(episodes).toBeInTheDocument()
 });
 
 //Tasks:
