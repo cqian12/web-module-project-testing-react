@@ -1,15 +1,46 @@
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import Display from '../Display';
+import { fetchShow } from './../../api/fetchShow'
+
+jest.mock('./../../api/fetchShow')
+
+const testShow = {
+    name: 'Nathan For You',
+    summary: 'GOAT',
+    seasons:[ {id:1, name: 'Season 1',episodes:[]},{id:2,name:'Season 2', episodes:[]}]
+}
+
+test("renders without error", () => {
+    render (<Display />)
+});
+
+test("when the fetch button is pressed, the show component displays", async () => {
+    fetchShow.mockResolvedValueOnce({
+        data: testShow
+    })
+    
+    render (<Display />)
+    
+    const button = screen.getByRole('button')
+    userEvent.click(button)
+
+    const show = screen.queryAllByTestId('show-container')
+
+    expect(show).toBeInTheDocument()
+})
+
+test("when the fetch button is pressed, the amount of select options rendered is equal to the amount of seasons", () => {
+    // render (<Display />)
+    
+    // const button = screen.getByRole('button')
+
+    // userEvent.click(button)
 
 
-
-
-
-
-
-
-
-
-
-
+})
 
 
 
